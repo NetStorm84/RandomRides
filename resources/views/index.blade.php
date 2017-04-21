@@ -62,10 +62,27 @@
               zoom: 6,
               center: uluru
             });
-            var marker = new google.maps.Marker({
-              position: uluru,
-              map: map
+
+            var routePath = [];
+
+            @foreach ($points as $point)
+
+              routePath.push({
+                lng:{{$point->lng}},
+                lat:{{$point->lat}}
+              });
+
+            @endforeach
+
+            var route = new google.maps.Polyline({
+              path: routePath,
+              geodesic: true,
+              strokeColor: '#FF0000',
+              strokeOpacity: 1.0,
+              strokeWeight: 2
             });
+
+            route.setMap(map);
           }
         </script>
 
