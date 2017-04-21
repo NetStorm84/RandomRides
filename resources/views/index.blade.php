@@ -24,7 +24,7 @@
         </div>
 
         <div class="container">
-          <form class="form-inline" method="get" action="/getRoute">
+          <form class="form-inline" method="get" action="/show">
             <div class="form-group">
               <label for="postcode">Postcode</label>
               <input type="text" class="form-control" id="postcode" placeholder="BN10 6TG" name="postcode">
@@ -46,6 +46,16 @@
         </div>
 
         <script>
+
+        @foreach ($route as $rt)
+
+          var route = {
+            title : "{{$rt['title']}}",
+            distance : "{{$rt['distance']}}"
+          }
+
+        @endforeach
+
           function initMap() {
             var uluru = {lat: 51, lng: -1};
             var map = new google.maps.Map(document.getElementById('map'), {

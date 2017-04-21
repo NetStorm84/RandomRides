@@ -11,7 +11,4 @@
 |
 */
 
-Route::get('/', function () {
-
-    return view('index');
-});
+Route::get('/route/{id}', 'RouteController@show');
