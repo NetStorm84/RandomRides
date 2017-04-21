@@ -15,4 +15,8 @@ class RouteController extends Controller
 
       return view('index', compact('route', 'points'));
     }
+
+    function index(){
+      return view('index');
+    }
 }

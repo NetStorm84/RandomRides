@@ -47,14 +47,16 @@
 
         <script>
 
-        @foreach ($route as $rt)
+        @if(!empty($route))
+          @foreach ($route as $rt)
 
-          var route = {
-            title : "{{$rt['title']}}",
-            distance : "{{$rt['distance']}}"
-          }
+            var route = {
+              title : "{{$rt['title']}}",
+              distance : "{{$rt['distance']}}"
+            }
 
-        @endforeach
+          @endforeach
+        @endif
 
           function initMap() {
             var uluru = {lat: 51, lng: -1};
@@ -65,24 +67,27 @@
 
             var routePath = [];
 
-            @foreach ($points as $point)
+            @if(!empty($points))
+              @foreach ($points as $point)
 
-              routePath.push({
-                lng:{{$point->lng}},
-                lat:{{$point->lat}}
+                routePath.push({
+                  lng:{{$point->lng}},
+                  lat:{{$point->lat}}
+                });
+
+              @endforeach
+
+              var route = new google.maps.Polyline({
+                path: routePath,
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
               });
 
-            @endforeach
+              route.setMap(map);
 
-            var route = new google.maps.Polyline({
-              path: routePath,
-              geodesic: true,
-              strokeColor: '#FF0000',
-              strokeOpacity: 1.0,
-              strokeWeight: 2
-            });
-
-            route.setMap(map);
+            @endif
           }
         </script>
 
