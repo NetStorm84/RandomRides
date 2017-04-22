@@ -24,10 +24,12 @@
         </div>
 
         <div class="container">
-          <form class="form-inline" method="get" action="/show">
+          <form class="form-inline" method="post" action="/route">
+            {{ csrf_field() }}
             <div class="form-group">
               <label for="postcode">Postcode</label>
-              <input type="text" class="form-control" id="postcode" placeholder="BN10 6TG" name="postcode">
+              <input type="text" class="form-control" id="postcode"
+                placeholder="BN10 6TG" name="postcode" required>
             </div>
             <div class="form-group">
               <label for="distance">Distance</label>

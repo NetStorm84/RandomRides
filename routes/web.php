@@ -14,3 +14,5 @@
 Route::get('/route/{id}', 'RouteController@show');
 
 Route::get('/', 'RouteController@index');
+
+Route::post('/route', 'RouteController@submit');

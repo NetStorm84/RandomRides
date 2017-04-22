@@ -16,8 +16,8 @@ class CreateRoutePointsTable extends Migration
       Schema::create('route_points', function (Blueprint $table) {
           $table->increments('id');
           $table->integer('route_id');
-          $table->decimal('lng');
-          $table->decimal('lat');
+          $table->decimal('lng',8,6);
+          $table->decimal('lat',8,6);
       });
     }
 

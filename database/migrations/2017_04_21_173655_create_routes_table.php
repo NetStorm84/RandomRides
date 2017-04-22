@@ -16,10 +16,10 @@ class CreateRoutesTable extends Migration
       Schema::create('routes', function (Blueprint $table) {
           $table->increments('id');
           $table->string('title');
-          $table->decimal('bounds_sw_lng');
-          $table->decimal('bounds_sw_lat');
-          $table->decimal('bounds_ne_lng');
-          $table->decimal('bounds_ne_lat');
+          $table->decimal('bounds_sw_lng',8,6);
+          $table->decimal('bounds_sw_lat',8,6);
+          $table->decimal('bounds_ne_lng',8,6);
+          $table->decimal('bounds_ne_lat',8,6);
           $table->float('distance');
       });
     }
