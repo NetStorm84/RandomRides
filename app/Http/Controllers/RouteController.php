@@ -10,8 +10,8 @@ class RouteController extends Controller
 {
     function show($id){
 
-      $route = Route::get()->where('id', '=', $id);
-      $points = RoutePoint::get()->where('route_id', '=', $id);
+      $route = Route::where('id', '=', $id)->get();
+      $points = RoutePoint::where('route_id', '=', $id)->get(['lng','lat']);
 
       return view('index', compact('route', 'points'));
     }
