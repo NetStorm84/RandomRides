@@ -10,10 +10,24 @@ class RouteController extends Controller
 {
     function show($id){
 
-      $route = Route::where('id', '=', $id)->get();
+      $maxLng = -180;
+      $minLng = 180;
+      $maxLat = -90;
+      $minLat = 90;
+
+      \DB::enableQueryLog();
+
+      $route = Route::find($id);
       $points = RoutePoint::where('route_id', '=', $id)->get(['lng','lat']);
 
-      return view('index', compact('route', 'points'));
+      foreach ($points as $point) {
+        $maxLng = $point['lng'] > $maxLng? $point['lng']: $maxLng;
+        $maxLat = $point['lat'] > $maxLat? $point['lat']: $maxLat;
+        $minLng = $point['lng'] < $minLng? $point['lng']: $minLng;
+        $minLat = $point['lat'] < $minLat? $point['lat']: $minLat;
+      }
+
+      return view('index', compact('route', 'points', 'maxLng', 'maxLat', 'minLng', 'minLat'));
     }
 
     function index(){
@@ -34,7 +48,10 @@ class RouteController extends Controller
       $postcodeJson = json_decode(file_get_contents($url, false,
         stream_context_create($contextOptions)));
 
-      return $postcodeJson->results[0]->geometry->location;
+        $location = !empty($postcodeJson->results)?
+          $postcodeJson->results[0]->geometry->location:null;
+
+      return $location;
     }
 
     function submit(Request $request){
@@ -45,6 +62,10 @@ class RouteController extends Controller
         $postcode = $request->input('postcode');
 
         $location = $this->gpsFromPostcode($postcode);
+
+        if ($location == null){
+          return redirect('/')->with('error', 'Please verify postcode is correct');
+        }
 
         $result = \DB::select("SELECT
                         route_id, MIN(
@@ -65,7 +86,12 @@ class RouteController extends Controller
           $ids[] = $value->route_id;
         }
 
-        return $this->show($ids[array_rand($ids)]);
+        if (empty($ids)){
+          return redirect('/')->with('error', 'There are no routes matching this criteria');
+        }
+
+        //return redirect()->route('route', ['id' => $ids[array_rand($ids)]]);
+        return redirect('route/'. $ids[array_rand($ids)]);
       }else{
         //No postcode has been entered
 

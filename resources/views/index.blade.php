@@ -26,11 +26,13 @@
         <div class="container">
           <form class="form-inline" method="post" action="/route">
             {{ csrf_field() }}
+
             <div class="form-group">
               <label for="postcode">Postcode</label>
-              <input type="text" class="form-control" id="postcode"
+              <input type="text" class="form-control" id="postcode" value=""
                 placeholder="BN10 6TG" name="postcode" required>
             </div>
+
             <div class="form-group">
               <label for="distance">Distance</label>
               <select class="form-control" name="distance">
@@ -39,7 +41,11 @@
                 <option value="250">250 Miles</option>
               </select>
             </div>
-            <button type="submit" class="btn btn-primary">Get Route</button>
+
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary">Get Route</button>
+            </div>
+
           </form>
         </div>
 
@@ -47,18 +53,15 @@
           <div id="map"></div>
         </div>
 
-        <script>
-
-        @if(!empty($route))
-          @foreach ($route as $rt)
-
-            var route = {
-              title : "{{$rt['title']}}",
-              distance : "{{$rt['distance']}}"
-            }
-
-          @endforeach
+        @if (session('error') != null)
+        <div class="container">
+          <div class="alert alert-danger">
+            {{ session('error')}}
+          </div>
+        </div>
         @endif
+
+        <script>
 
           function initMap() {
             var uluru = {lat: 51, lng: -1};
@@ -66,6 +69,23 @@
               zoom: 6,
               center: uluru
             });
+
+            @if(!empty($route))
+
+              var bounds = {
+                north: {{$maxLat}},
+                east: {{$maxLng}},
+                south: {{$minLat}},
+                west: {{$minLng}},
+              }
+
+              @foreach ($route as $rt)
+                var route = {
+                  title : "{{$rt['title']}}",
+                  distance : "{{$rt['distance']}}"
+                }
+              @endforeach
+            @endif
 
             var routePath = [];
 
@@ -84,10 +104,11 @@
                 geodesic: true,
                 strokeColor: '#FF0000',
                 strokeOpacity: 1.0,
-                strokeWeight: 2
+                strokeWeight: 3
               });
 
               route.setMap(map);
+              map.fitBounds(bounds);
 
             @endif
           }
